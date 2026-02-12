@@ -157,99 +157,68 @@ The system consists of two integrated modules: a Carbon Emission Calculator and 
     </footer>
 
     <script>
-        // TIMER LOGIC
-        let sec = 0;
-        let timer = null;
-        function startTimer() {
-            timer = setInterval(() => {
-                sec++;
-                let m = Math.floor(sec / 60);
-                let s = sec % 60;
-                document.getElementById('displayTime').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                
-                if (sec >= 480 && sec < 600) { // 8-10 Mins Warning
-                    document.getElementById('timerContainer').classList.add('timer-warning');
-                    document.getElementById('timerIcon').classList.replace('fa-hourglass-start', 'fa-hourglass-half');
-                } else if (sec >= 600) { // 10 Mins Stop
-                    clearInterval(timer);
-                    document.getElementById('timerContainer').classList.replace('timer-warning', 'timer-stop');
-                    document.getElementById('displayTime').innerText = "10:00";
-                    document.getElementById('timerIcon').classList.replace('fa-hourglass-half', 'fa-hourglass-end');
-                }
-            }, 1000);
-        }
+    // TIMER LOGIC
+    let sec = 0;
+    let timer = null;
 
-        // RESULTS CHART (Demo Data)
-        const ctx = document.getElementById('resultsChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Existing System', 'Our Solution'],
-                datasets: [{
-                    data: [70, 92],
-                    backgroundColor: ['#1e293b', '#3b82f6'],
-                    borderRadius: 15,
-                    barThickness: 50
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    y: { beginAtZero: true, grid: { color: '#ffffff05' }, ticks: { color: '#475569' } },
-                    x: { grid: { display: false }, ticks: { color: '#475569' } }
+    function startTimer() {
+        timer = setInterval(() => {
+            sec++;
+            let m = Math.floor(sec / 60);
+            let s = sec % 60;
+
+            document.getElementById('displayTime').innerText =
+                `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+            if (sec >= 480 && sec < 600) {
+                document.getElementById('timerContainer').classList.add('timer-warning');
+                document.getElementById('timerIcon').classList.replace('fa-hourglass-start', 'fa-hourglass-half');
+            } 
+            else if (sec >= 600) {
+                clearInterval(timer);
+                document.getElementById('timerContainer').classList.replace('timer-warning', 'timer-stop');
+                document.getElementById('displayTime').innerText = "10:00";
+                document.getElementById('timerIcon').classList.replace('fa-hourglass-half', 'fa-hourglass-end');
+            }
+        }, 1000);
+    }
+
+    // RESULTS CHART
+    const ctx = document.getElementById('resultsChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Existing System', 'Our Solution'],
+            datasets: [{
+                data: [70, 92],
+                backgroundColor: ['#1e293b', '#3b82f6'],
+                borderRadius: 15,
+                barThickness: 50
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#ffffff05' },
+                    ticks: { color: '#475569' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#475569' }
                 }
             }
-        });
-        
-        // TIMER LOGIC
-        let sec = 0;
-        let timer = null;
-        function startTimer() {
-            timer = setInterval(() => {
-                sec++;
-                let m = Math.floor(sec / 60);
-                let s = sec % 60;
-                document.getElementById('displayTime').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                
-                if (sec >= 480 && sec < 600) { // 8-10 Mins Warning
-                    document.getElementById('timerContainer').classList.add('timer-warning');
-                    document.getElementById('timerIcon').classList.replace('fa-hourglass-start', 'fa-hourglass-half');
-                } else if (sec >= 600) { // 10 Mins Stop
-                    clearInterval(timer);
-                    document.getElementById('timerContainer').classList.replace('timer-warning', 'timer-stop');
-                    document.getElementById('displayTime').innerText = "10:00";
-                    document.getElementById('timerIcon').classList.replace('fa-hourglass-half', 'fa-hourglass-end');
-                }
-            }, 1000);
         }
+    });
 
-        // RESULTS CHART (Demo Data)
-        const ctx = document.getElementById('resultsChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Existing System', 'Our Solution'],
-                datasets: [{
-                    data: [70, 92],
-                    backgroundColor: ['#1e293b', '#3b82f6'],
-                    borderRadius: 15,
-                    barThickness: 50
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    y: { beginAtZero: true, grid: { color: '#ffffff05' }, ticks: { color: '#475569' } },
-                    x: { grid: { display: false }, ticks: { color: '#475569' } }
-                }
-            }
-        });
-        startTimer();
-    </script>
+    // START TIMER
+    startTimer();
+</script>
+
 
 </body></html>
    
