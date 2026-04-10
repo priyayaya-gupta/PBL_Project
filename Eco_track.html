@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EcoTrack</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="app">
+
+  <h2>🌱 EcoTrack</h2>
+
+  <div class="main">
+    <h1 id="co2">0 kg</h1>
+    <p id="msg">You're doing good 👍</p>
+    <p id="points">EcoPoints: 100</p>
+  </div>
+
+  <div class="actions">
+    <button onclick="addTravel()">🚗</button>
+    <button onclick="addScreen()">📱</button>
+    <button onclick="foodPrompt()">🍔</button>
+  </div>
+
+  <button class="reset" onclick="resetData()">Reset</button>
+
+  <canvas id="chart"></canvas>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
