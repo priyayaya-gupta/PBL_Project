@@ -1,36 +1,982 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>EcoTrack</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoTrack App</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0e0e0e; --bg2: #141414; --bg3: #1c1c1c; --bg4: #222;
+  --ink: #f0ede8; --ink2: #8a8880; --ink3: #4a4845;
+  --green: #4ade80; --green-dim: rgba(74,222,128,0.1); --green-border: rgba(74,222,128,0.2);
+  --amber: #f59e0b; --coral: #f87171;
+  --line: rgba(255,255,255,0.07);
+  --serif: 'Instrument Serif', serif;
+  --sans: 'Geist', sans-serif;
+  --sidebar: 220px;
+}
+body { font-family: var(--sans); background: var(--bg); color: var(--ink); font-weight: 300; display: flex; min-height: 100vh; font-size: 14px; }
 
+/* SIDEBAR */
+.sidebar {
+  width: var(--sidebar); flex-shrink: 0;
+  background: var(--bg2); border-right: 1px solid var(--line);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 10;
+}
+.sb-logo { padding: 24px 20px 20px; border-bottom: 1px solid var(--line); }
+.sb-logo-text { font-family: var(--serif); font-size: 22px; letter-spacing: -0.5px; }
+.sb-logo-text em { font-style: italic; color: var(--green); }
+.sb-logo-sub { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+
+.sb-nav { flex: 1; padding: 16px 10px; display: flex; flex-direction: column; gap: 2px; }
+.sb-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px;
+  font-size: 13px; color: var(--ink2); cursor: pointer;
+  transition: all 0.2s; font-weight: 400; border: none; background: none; width: 100%; text-align: left;
+}
+.sb-item:hover { background: var(--bg3); color: var(--ink); }
+.sb-item.active { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
+.sb-icon { font-size: 16px; width: 20px; text-align: center; }
+
+.sb-user { padding: 16px 20px; border-top: 1px solid var(--line); }
+.sb-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--green-dim); border: 1px solid var(--green-border); display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--green); font-weight: 500; }
+.sb-user-row { display: flex; align-items: center; gap: 10px; }
+.sb-uname { font-size: 13px; font-weight: 400; }
+.sb-uid { font-size: 11px; color: var(--ink3); }
+
+/* MAIN */
+.main { margin-left: var(--sidebar); flex: 1; display: flex; flex-direction: column; }
+.topbar {
+  padding: 18px 32px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg); position: sticky; top: 0; z-index: 5;
+}
+.topbar-title { font-family: var(--serif); font-size: 20px; letter-spacing: -0.3px; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.score-pill {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--green-dim); border: 1px solid var(--green-border);
+  border-radius: 100px; padding: 6px 14px;
+  font-size: 13px; color: var(--green); font-weight: 500;
+}
+.score-pill span { font-family: var(--serif); font-size: 18px; }
+.date-chip { font-size: 12px; color: var(--ink3); background: var(--bg3); padding: 6px 12px; border-radius: 100px; }
+
+.content { flex: 1; padding: 28px 32px; overflow-y: auto; }
+
+/* PAGE VISIBILITY */
+.page { display: none; }
+.page.active { display: block; }
+
+/* CARDS */
+.card {
+  background: var(--bg2); border: 1px solid var(--line);
+  border-radius: 12px; padding: 24px;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: rgba(255,255,255,0.12); }
+.card-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink3); margin-bottom: 12px; font-weight: 400; }
+
+/* GRID LAYOUTS */
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 20px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
+
+/* STAT CARDS */
+.stat-card { background: var(--bg2); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+.stat-label { font-size: 11px; color: var(--ink3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+.stat-num { font-family: var(--serif); font-size: 36px; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
+.stat-sub { font-size: 12px; color: var(--ink3); }
+.stat-green { color: var(--green); }
+.stat-amber { color: var(--amber); }
+.stat-coral { color: var(--coral); }
+.trend { font-size: 11px; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; padding: 2px 8px; border-radius: 100px; }
+.trend.good { background: var(--green-dim); color: var(--green); }
+.trend.bad { background: rgba(248,113,113,0.1); color: var(--coral); }
+
+/* CHART CONTAINER */
+.chart-wrap { position: relative; height: 200px; }
+
+/* ACTIVITY LIST */
+.activity-list { display: flex; flex-direction: column; gap: 0; }
+.act-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 0; border-bottom: 1px solid var(--line);
+}
+.act-item:last-child { border-bottom: none; }
+.act-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.act-info { flex: 1; }
+.act-name { font-size: 13px; font-weight: 400; margin-bottom: 2px; }
+.act-time { font-size: 11px; color: var(--ink3); }
+.act-co2 { font-size: 13px; font-weight: 500; text-align: right; }
+.act-source { font-size: 10px; color: var(--ink3); text-align: right; margin-top: 2px; }
+
+/* LEADERBOARD */
+.lb-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 0; border-bottom: 1px solid var(--line);
+}
+.lb-item:last-child { border-bottom: none; }
+.lb-rank { font-family: var(--serif); font-size: 20px; color: var(--ink3); width: 32px; text-align: center; font-style: italic; }
+.lb-rank.gold { color: #f59e0b; }
+.lb-rank.silver { color: #94a3b8; }
+.lb-rank.bronze { color: #cd7c3e; }
+.lb-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.lb-name { flex: 1; font-size: 13px; font-weight: 400; }
+.lb-dept { font-size: 11px; color: var(--ink3); }
+.lb-score { text-align: right; }
+.lb-pts { font-family: var(--serif); font-size: 20px; color: var(--green); }
+.lb-badge { font-size: 10px; color: var(--ink3); }
+.you-row { background: var(--green-dim); border-radius: 8px; padding: 14px 12px !important; margin: 4px -12px; border-bottom: none !important; }
+
+/* PROGRESS BAR */
+.prog-wrap { margin: 10px 0; }
+.prog-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink2); margin-bottom: 6px; }
+.prog-bar { height: 6px; background: var(--bg3); border-radius: 100px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 100px; transition: width 1s ease; }
+
+/* CALCULATOR */
+.calc-section { margin-bottom: 24px; }
+.calc-title { font-family: var(--serif); font-size: 18px; margin-bottom: 16px; letter-spacing: -0.3px; }
+.calc-title em { font-style: italic; color: var(--green); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 11px; color: var(--ink3); letter-spacing: 1px; text-transform: uppercase; font-weight: 400; }
+.form-input, .form-select {
+  background: var(--bg3); border: 1px solid var(--line); border-radius: 8px;
+  color: var(--ink); font-family: var(--sans); font-size: 13px; font-weight: 300;
+  padding: 10px 14px; outline: none; transition: border-color 0.2s;
+  appearance: none; width: 100%;
+}
+.form-input:focus, .form-select:focus { border-color: var(--green-border); }
+.form-input::placeholder { color: var(--ink3); }
+.calc-btn {
+  background: var(--green); color: #0e0e0e; border: none;
+  padding: 12px 28px; border-radius: 8px; font-family: var(--sans);
+  font-size: 13px; font-weight: 500; cursor: pointer; transition: opacity 0.2s;
+}
+.calc-btn:hover { opacity: 0.85; }
+.result-box {
+  background: var(--green-dim); border: 1px solid var(--green-border);
+  border-radius: 12px; padding: 24px; margin-top: 20px;
+  display: none;
+}
+.result-box.show { display: block; }
+.result-num { font-family: var(--serif); font-size: 52px; color: var(--green); letter-spacing: -2px; line-height: 1; }
+.result-unit { font-size: 16px; color: var(--ink2); margin-top: 4px; }
+.result-breakdown { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+.rb-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+.rb-row span:last-child { color: var(--green); font-weight: 500; }
+
+/* REWARDS */
+.rewards-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
+.reward-card {
+  background: var(--bg2); border: 1px solid var(--line); border-radius: 12px;
+  padding: 20px; transition: all 0.2s; cursor: pointer;
+}
+.reward-card:hover { border-color: var(--green-border); transform: translateY(-2px); }
+.reward-brand { font-size: 24px; margin-bottom: 10px; }
+.reward-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.reward-desc { font-size: 12px; color: var(--ink3); margin-bottom: 14px; line-height: 1.5; }
+.reward-pts { display: flex; justify-content: space-between; align-items: center; }
+.pts-cost { font-family: var(--serif); font-size: 20px; color: var(--amber); }
+.redeem-btn {
+  font-size: 11px; font-weight: 500; padding: 5px 12px;
+  background: var(--green-dim); color: var(--green);
+  border: 1px solid var(--green-border); border-radius: 100px; cursor: pointer;
+  transition: all 0.2s; font-family: var(--sans);
+}
+.redeem-btn:hover { background: var(--green); color: #0e0e0e; border-color: var(--green); }
+.redeem-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* AI INSIGHT */
+.insight-card {
+  background: var(--bg2); border: 1px solid var(--green-border);
+  border-radius: 12px; padding: 28px; margin-bottom: 20px;
+  border-left: 3px solid var(--green);
+}
+.insight-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.insight-badge { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); background: var(--green-dim); padding: 4px 10px; border-radius: 100px; font-weight: 500; }
+.insight-text { font-family: var(--serif); font-size: 18px; line-height: 1.6; color: var(--ink); letter-spacing: -0.2px; }
+.insight-text em { font-style: italic; color: var(--green); }
+.insight-savings { display: flex; gap: 16px; margin-top: 20px; }
+.saving-chip { background: var(--bg3); border-radius: 8px; padding: 12px 16px; flex: 1; }
+.saving-val { font-family: var(--serif); font-size: 22px; color: var(--green); letter-spacing: -0.5px; }
+.saving-lbl { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+
+/* VEHICLE PROFILE */
+.vehicle-card {
+  background: var(--bg3); border: 1px solid var(--green-border);
+  border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 16px;
+  margin-bottom: 16px;
+}
+.vehicle-icon { font-size: 32px; }
+.vehicle-info { flex: 1; }
+.vehicle-name { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.vehicle-detail { font-size: 12px; color: var(--ink3); }
+.vehicle-ef { text-align: right; }
+.ef-num { font-family: var(--serif); font-size: 22px; color: var(--amber); }
+.ef-lbl { font-size: 11px; color: var(--ink3); }
+
+/* NOTIFICATION TOAST */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--bg3); border: 1px solid var(--green-border);
+  border-radius: 10px; padding: 14px 18px;
+  font-size: 13px; color: var(--ink); z-index: 1000;
+  transform: translateY(80px); opacity: 0;
+  transition: all 0.35s ease; max-width: 300px; line-height: 1.5;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast strong { color: var(--green); font-weight: 500; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 2px; }
+
+/* TAG */
+.vtag { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 100px; font-weight: 500; }
+.vtag-green { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
+.vtag-amber { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+</style>
+</head>
 <body>
 
-<div class="app">
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-text">Eco<em>Track</em></div>
+    <div class="sb-logo-sub">Carbon Intelligence</div>
+  </div>
+  <nav class="sb-nav">
+    <button class="sb-item active" onclick="showPage('dashboard', this)"><span class="sb-icon">◈</span> Dashboard</button>
+    <button class="sb-item" onclick="showPage('calculator', this)"><span class="sb-icon">⊕</span> Calculator</button>
+    <button class="sb-item" onclick="showPage('leaderboard', this)"><span class="sb-icon">◎</span> Leaderboard</button>
+    <button class="sb-item" onclick="showPage('insights', this)"><span class="sb-icon">✦</span> AI Insights</button>
+    <button class="sb-item" onclick="showPage('rewards', this)"><span class="sb-icon">◇</span> Rewards</button>
+    <button class="sb-item" onclick="showPage('profile', this)"><span class="sb-icon">○</span> Profile</button>
+  </nav>
+  <div class="sb-user">
+    <div class="sb-user-row">
+      <div class="sb-avatar">P</div>
+      <div>
+        <div class="sb-uname">Priya Gupta</div>
+        <div class="sb-uid">2427030112</div>
+      </div>
+    </div>
+  </div>
+</aside>
 
-  <h2>🌱 EcoTrack</h2>
-
-  <div class="main">
-    <h1 id="co2">0 kg</h1>
-    <p id="msg">You're doing good 👍</p>
-    <p id="points">EcoPoints: 100</p>
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">Dashboard</div>
+    <div class="topbar-right">
+      <div class="score-pill">🌿 <span id="top-score">847</span> pts</div>
+      <div class="date-chip">Sun, 13 Apr 2026</div>
+    </div>
   </div>
 
-  <div class="actions">
-    <button onclick="addTravel()">🚗</button>
-    <button onclick="addScreen()">📱</button>
-    <button onclick="foodPrompt()">🍔</button>
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="grid-4">
+        <div class="stat-card">
+          <div class="stat-label">Today's emissions</div>
+          <div class="stat-num stat-amber">3.2<small style="font-size:16px"> kg</small></div>
+          <div class="stat-sub">CO₂ equivalent</div>
+          <div class="trend good">↓ 18% vs yesterday</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">This week</div>
+          <div class="stat-num stat-green">18.4<small style="font-size:16px"> kg</small></div>
+          <div class="stat-sub">CO₂ total</div>
+          <div class="trend good">↓ 12% vs last week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Carbon points</div>
+          <div class="stat-num" style="color:var(--ink)">847</div>
+          <div class="stat-sub">Redeemable</div>
+          <div class="trend good">+64 today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">College rank</div>
+          <div class="stat-num stat-green">#12</div>
+          <div class="stat-sub">of 340 students</div>
+          <div class="trend good">↑ 3 places</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Weekly emissions (kg CO₂)</div>
+          <div class="chart-wrap"><canvas id="weekChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Breakdown by source</div>
+          <div class="chart-wrap"><canvas id="pieChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Today's activity — auto-tracked</div>
+          <div class="activity-list">
+            <div class="act-item">
+              <div class="act-icon" style="background:rgba(74,222,128,0.1)">🚗</div>
+              <div class="act-info"><div class="act-name">Drive to college — Hyundai Creta Diesel</div><div class="act-time">8:14 AM · 6.2 km · GPS + Fuel SMS verified</div></div>
+              <div><div class="act-co2" style="color:var(--amber)">+0.93 kg</div><div class="act-source vtag vtag-green">Verified</div></div>
+            </div>
+            <div class="act-item">
+              <div class="act-icon" style="background:rgba(248,113,113,0.1)">🍗</div>
+              <div class="act-info"><div class="act-name">Zomato order — Chicken Biryani</div><div class="act-time">1:22 PM · SMS parsed · Non-veg detected</div></div>
+              <div><div class="act-co2" style="color:var(--coral)">+1.65 kg</div><div class="act-source vtag vtag-green">Verified</div></div>
+            </div>
+            <div class="act-item">
+              <div class="act-icon" style="background:rgba(74,222,128,0.1)">🚶</div>
+              <div class="act-info"><div class="act-name">Walk to library</div><div class="act-time">3:45 PM · 0.8 km · GPS detected</div></div>
+              <div><div class="act-co2" style="color:var(--green)">+0.00 kg</div><div class="act-source vtag vtag-green">Verified</div></div>
+            </div>
+            <div class="act-item">
+              <div class="act-icon" style="background:rgba(59,130,246,0.1)">📱</div>
+              <div class="act-info"><div class="act-name">Netflix streaming — 2.5 hrs</div><div class="act-time">9:00 PM · Digital Wellbeing API</div></div>
+              <div><div class="act-co2" style="color:var(--amber)">+0.09 kg</div><div class="act-source vtag vtag-green">Verified</div></div>
+            </div>
+            <div class="act-item">
+              <div class="act-icon" style="background:rgba(245,158,11,0.1)">⚡</div>
+              <div class="act-info"><div class="act-name">Electricity — daily share</div><div class="act-time">DISCOM auto-fetch · 3.2 kWh</div></div>
+              <div><div class="act-co2" style="color:var(--amber)">+0.51 kg</div><div class="act-source vtag vtag-green">Verified</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Monthly progress</div>
+          <div style="margin-bottom:20px;">
+            <div class="prog-wrap">
+              <div class="prog-label"><span>Travel</span><span>8.4 kg / 15 kg target</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:56%;background:var(--amber)"></div></div>
+            </div>
+            <div class="prog-wrap">
+              <div class="prog-label"><span>Food</span><span>12.1 kg / 20 kg target</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:60%;background:var(--coral)"></div></div>
+            </div>
+            <div class="prog-wrap">
+              <div class="prog-label"><span>Electricity</span><span>4.2 kg / 10 kg target</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:42%;background:var(--green)"></div></div>
+            </div>
+            <div class="prog-wrap">
+              <div class="prog-label"><span>Streaming</span><span>1.8 kg / 5 kg target</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:36%;background:var(--green)"></div></div>
+            </div>
+          </div>
+          <div class="card-title" style="margin-top:8px">Streak</div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <div style="text-align:center;flex:1" id="streak-days"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALCULATOR -->
+    <div class="page" id="page-calculator">
+      <div class="grid-2">
+        <div>
+          <div class="card calc-section">
+            <div class="card-title">Trip calculator</div>
+            <div class="calc-title">Calculate <em>travel</em> emissions</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">From</label>
+                <input class="form-input" id="from" placeholder="e.g. Malviya Nagar" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">To</label>
+                <input class="form-input" id="to" placeholder="e.g. MUJ Campus" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Distance (km)</label>
+                <input class="form-input" id="dist" type="number" placeholder="e.g. 12" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Mode</label>
+                <select class="form-select" id="mode" onchange="updateVehicleField()">
+                  <option value="car">Car / SUV</option>
+                  <option value="bike">Motorbike</option>
+                  <option value="cng">CNG Auto</option>
+                  <option value="metro">Metro</option>
+                  <option value="bus">Bus</option>
+                  <option value="walk">Walk / Cycle</option>
+                  <option value="ev">Electric Vehicle</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" id="vehicle-field" style="margin-bottom:14px">
+              <label class="form-label">Your vehicle (ARAI data)</label>
+              <select class="form-select" id="vehicle">
+                <option value="120">Maruti Swift Petrol — 120 g/km</option>
+                <option value="140">Hyundai i20 Petrol — 140 g/km</option>
+                <option value="160" selected>Hyundai Creta Diesel — 160 g/km</option>
+                <option value="175">Toyota Innova Diesel — 175 g/km</option>
+                <option value="210">Ford Endeavour Diesel — 210 g/km</option>
+                <option value="95">Maruti Alto CNG — 95 g/km</option>
+                <option value="85">Bajaj Pulsar CNG — 85 g/km</option>
+              </select>
+            </div>
+            <button class="calc-btn" onclick="calcTravel()">Calculate emissions</button>
+            <div class="result-box" id="travel-result">
+              <div style="display:flex;align-items:baseline;gap:8px">
+                <div class="result-num" id="travel-num">—</div>
+                <div class="result-unit">kg CO₂</div>
+              </div>
+              <div class="result-breakdown" id="travel-breakdown"></div>
+            </div>
+          </div>
+
+          <div class="card calc-section">
+            <div class="card-title">Food emission calculator</div>
+            <div class="calc-title">Calculate <em>food</em> emissions</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Meal type</label>
+                <select class="form-select" id="meal-type">
+                  <option value="veg">Veg meal (home cooked)</option>
+                  <option value="veg-delivery">Veg meal (Zomato/Swiggy)</option>
+                  <option value="nonveg">Non-veg meal (home cooked)</option>
+                  <option value="nonveg-delivery">Non-veg meal (Zomato/Swiggy)</option>
+                  <option value="egg">Egg-based meal</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Meals today</label>
+                <input class="form-input" id="meal-count" type="number" value="1" min="1" max="5" />
+              </div>
+            </div>
+            <button class="calc-btn" onclick="calcFood()">Calculate emissions</button>
+            <div class="result-box" id="food-result">
+              <div style="display:flex;align-items:baseline;gap:8px">
+                <div class="result-num" id="food-num">—</div>
+                <div class="result-unit">kg CO₂</div>
+              </div>
+              <div class="result-breakdown" id="food-breakdown"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card calc-section">
+            <div class="card-title">Electricity calculator</div>
+            <div class="calc-title">Calculate <em>electricity</em> emissions</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Monthly units (kWh)</label>
+                <input class="form-input" id="kwh" type="number" placeholder="e.g. 180" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">State</label>
+                <select class="form-select" id="state">
+                  <option value="0.82">Rajasthan — 0.82 kg/kWh</option>
+                  <option value="0.79">Delhi — 0.79 kg/kWh</option>
+                  <option value="0.85">UP — 0.85 kg/kWh</option>
+                  <option value="0.68">Maharashtra — 0.68 kg/kWh</option>
+                  <option value="0.71">Karnataka — 0.71 kg/kWh</option>
+                </select>
+              </div>
+            </div>
+            <button class="calc-btn" onclick="calcElec()">Calculate emissions</button>
+            <div class="result-box" id="elec-result">
+              <div style="display:flex;align-items:baseline;gap:8px">
+                <div class="result-num" id="elec-num">—</div>
+                <div class="result-unit">kg CO₂ / month</div>
+              </div>
+              <div class="result-breakdown" id="elec-breakdown"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Emission factors reference — ARAI / IPCC</div>
+            <div style="display:flex;flex-direction:column;gap:0">
+              <div class="act-item"><div class="act-icon" style="background:rgba(248,113,113,0.1)">🚗</div><div class="act-info"><div class="act-name">Petrol car</div><div class="act-time">Average</div></div><div class="act-co2" style="color:var(--amber)">120–175 g/km</div></div>
+              <div class="act-item"><div class="act-icon" style="background:rgba(245,158,11,0.1)">🏍️</div><div class="act-info"><div class="act-name">Motorbike petrol</div><div class="act-time">Average</div></div><div class="act-co2" style="color:var(--amber)">65–90 g/km</div></div>
+              <div class="act-item"><div class="act-icon" style="background:rgba(74,222,128,0.1)">🚌</div><div class="act-info"><div class="act-name">City bus</div><div class="act-time">Per passenger</div></div><div class="act-co2" style="color:var(--green)">25–35 g/km</div></div>
+              <div class="act-item"><div class="act-icon" style="background:rgba(74,222,128,0.1)">🚇</div><div class="act-info"><div class="act-name">Metro rail</div><div class="act-time">Per passenger</div></div><div class="act-co2" style="color:var(--green)">8–12 g/km</div></div>
+              <div class="act-item"><div class="act-icon" style="background:rgba(248,113,113,0.1)">🐄</div><div class="act-info"><div class="act-name">Beef meal</div><div class="act-time">Per serving</div></div><div class="act-co2" style="color:var(--coral)">6.0–8.0 kg</div></div>
+              <div class="act-item"><div class="act-icon" style="background:rgba(245,158,11,0.1)">🍗</div><div class="act-info"><div class="act-name">Chicken meal</div><div class="act-time">Per serving</div></div><div class="act-co2" style="color:var(--amber)">1.4–2.0 kg</div></div>
+              <div class="act-item"><div class="act-icon" style="background:rgba(74,222,128,0.1)">🥗</div><div class="act-info"><div class="act-name">Veg meal</div><div class="act-time">Per serving</div></div><div class="act-co2" style="color:var(--green)">0.3–0.6 kg</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div class="page" id="page-leaderboard">
+      <div class="grid-3" style="margin-bottom:20px">
+        <div class="stat-card"><div class="stat-label">Your rank</div><div class="stat-num stat-green">#12</div><div class="stat-sub">Top 4% of college</div></div>
+        <div class="stat-card"><div class="stat-label">Your score</div><div class="stat-num" style="color:var(--ink)">847</div><div class="stat-sub">Carbon points</div></div>
+        <div class="stat-card"><div class="stat-label">College avg.</div><div class="stat-num stat-amber">312</div><div class="stat-sub">Points per student</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">MUJ College leaderboard — CSE batch</div>
+          <div class="activity-list" id="lb-list"></div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Ranking criteria</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+              <div class="prog-wrap">
+                <div class="prog-label"><span>Verified travel data</span><span>35%</span></div>
+                <div class="prog-bar"><div class="prog-fill" style="width:35%;background:var(--green)"></div></div>
+              </div>
+              <div class="prog-wrap">
+                <div class="prog-label"><span>Food choices</span><span>25%</span></div>
+                <div class="prog-bar"><div class="prog-fill" style="width:25%;background:var(--amber)"></div></div>
+              </div>
+              <div class="prog-wrap">
+                <div class="prog-label"><span>Electricity reduction</span><span>20%</span></div>
+                <div class="prog-bar"><div class="prog-fill" style="width:20%;background:var(--green)"></div></div>
+              </div>
+              <div class="prog-wrap">
+                <div class="prog-label"><span>Streaks & consistency</span><span>20%</span></div>
+                <div class="prog-bar"><div class="prog-fill" style="width:20%;background:var(--amber)"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Your badges</div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px">
+              <div style="text-align:center;padding:14px;background:var(--bg3);border-radius:10px;min-width:80px"><div style="font-size:24px">🚶</div><div style="font-size:11px;color:var(--ink2);margin-top:6px">Walker</div></div>
+              <div style="text-align:center;padding:14px;background:var(--bg3);border-radius:10px;min-width:80px"><div style="font-size:24px">🥗</div><div style="font-size:11px;color:var(--ink2);margin-top:6px">Green Eater</div></div>
+              <div style="text-align:center;padding:14px;background:var(--bg3);border-radius:10px;min-width:80px"><div style="font-size:24px">🔥</div><div style="font-size:11px;color:var(--ink2);margin-top:6px">14-day streak</div></div>
+              <div style="text-align:center;padding:14px;background:var(--bg3);border-radius:10px;opacity:0.35;min-width:80px"><div style="font-size:24px">⚡</div><div style="font-size:11px;color:var(--ink2);margin-top:6px">Low Power</div></div>
+              <div style="text-align:center;padding:14px;background:var(--bg3);border-radius:10px;opacity:0.35;min-width:80px"><div style="font-size:24px">🌱</div><div style="font-size:11px;color:var(--ink2);margin-top:6px">100kg saved</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSIGHTS -->
+    <div class="page" id="page-insights">
+      <div class="insight-card">
+        <div class="insight-header">
+          <span style="font-size:20px">✦</span>
+          <span class="insight-badge">AI Weekly Insight — Week 15</span>
+          <span style="font-size:11px;color:var(--ink3);margin-left:auto">Generated by Claude · Sun 13 Apr</span>
+        </div>
+        <div class="insight-text">
+          Your emissions this week were <em>18.4 kg CO₂</em> — down 12% from last week. The biggest culprit was your <em>Tuesday Uber ride</em> (2.1 kg). If you switch to metro on Tuesdays and Thursdays, you'd save <em>₹640/month</em> and cut 8.4 kg CO₂. Your food choices are improving — 4 out of 7 days were veg, keep that up.
+        </div>
+        <div class="insight-savings">
+          <div class="saving-chip"><div class="saving-val">₹640</div><div class="saving-lbl">Monthly savings if you metro 2x/week</div></div>
+          <div class="saving-chip"><div class="saving-val">8.4 kg</div><div class="saving-lbl">CO₂ reduction per month</div></div>
+          <div class="saving-chip"><div class="saving-val">↓ 12%</div><div class="saving-lbl">Emission reduction vs last week</div></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Weekly comparison</div>
+          <div class="chart-wrap"><canvas id="compareChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Previous insights</div>
+          <div class="activity-list">
+            <div class="act-item">
+              <div class="act-icon" style="background:var(--green-dim);font-size:13px;color:var(--green)">✦</div>
+              <div class="act-info"><div class="act-name">Week 14 — Food was your biggest source</div><div class="act-time">6 Apr 2026 · Non-veg 5/7 days</div></div>
+            </div>
+            <div class="act-item">
+              <div class="act-icon" style="background:var(--green-dim);font-size:13px;color:var(--green)">✦</div>
+              <div class="act-info"><div class="act-name">Week 13 — Best week so far!</div><div class="act-time">30 Mar 2026 · 15.2 kg total</div></div>
+            </div>
+            <div class="act-item">
+              <div class="act-icon" style="background:var(--green-dim);font-size:13px;color:var(--green)">✦</div>
+              <div class="act-info"><div class="act-name">Week 12 — Electricity spike detected</div><div class="act-time">23 Mar 2026 · AC usage high</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Carbon Wrapped — April 2026</div>
+        <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:8px">
+          <div style="flex:1;min-width:140px;background:var(--bg3);border-radius:10px;padding:20px;text-align:center">
+            <div style="font-size:32px;margin-bottom:8px">🚗</div>
+            <div style="font-family:var(--serif);font-size:28px;color:var(--amber)">36.2 kg</div>
+            <div style="font-size:12px;color:var(--ink3);margin-top:4px">Travel emissions</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:var(--bg3);border-radius:10px;padding:20px;text-align:center">
+            <div style="font-size:32px;margin-bottom:8px">🍽️</div>
+            <div style="font-family:var(--serif);font-size:28px;color:var(--coral)">48.1 kg</div>
+            <div style="font-size:12px;color:var(--ink3);margin-top:4px">Food emissions</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:var(--bg3);border-radius:10px;padding:20px;text-align:center">
+            <div style="font-size:32px;margin-bottom:8px">⚡</div>
+            <div style="font-family:var(--serif);font-size:28px;color:var(--green)">16.4 kg</div>
+            <div style="font-size:12px;color:var(--ink3);margin-top:4px">Electricity</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:var(--bg3);border-radius:10px;padding:20px;text-align:center">
+            <div style="font-size:32px;margin-bottom:8px">📱</div>
+            <div style="font-family:var(--serif);font-size:28px;color:var(--green)">3.8 kg</div>
+            <div style="font-size:12px;color:var(--ink3);margin-top:4px">Streaming</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:var(--green-dim);border:1px solid var(--green-border);border-radius:10px;padding:20px;text-align:center">
+            <div style="font-size:32px;margin-bottom:8px">🌍</div>
+            <div style="font-family:var(--serif);font-size:28px;color:var(--green)">104.5 kg</div>
+            <div style="font-size:12px;color:var(--ink3);margin-top:4px">Total · vs 142 kg avg</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REWARDS -->
+    <div class="page" id="page-rewards">
+      <div class="grid-3" style="margin-bottom:20px">
+        <div class="stat-card"><div class="stat-label">Available points</div><div class="stat-num stat-green">847</div><div class="stat-sub">Verified · redeemable</div></div>
+        <div class="stat-card"><div class="stat-label">Points redeemed</div><div class="stat-num" style="color:var(--ink)">320</div><div class="stat-sub">This month</div></div>
+        <div class="stat-card"><div class="stat-label">Verification status</div><div class="stat-num stat-green">94%</div><div class="stat-sub">Data verified</div></div>
+      </div>
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-title">Partner rewards</div>
+        <div class="rewards-grid" style="margin-top:16px">
+          <div class="reward-card">
+            <div class="reward-brand">🌿</div>
+            <div class="reward-name">Nykaa — 15% off</div>
+            <div class="reward-desc">On all sustainable beauty products. Valid for 30 days after redemption.</div>
+            <div class="reward-pts"><div class="pts-cost">200 pts</div><button class="redeem-btn" onclick="redeem(this, 200, 'Nykaa 15% off')">Redeem</button></div>
+          </div>
+          <div class="reward-card">
+            <div class="reward-brand">🚇</div>
+            <div class="reward-name">Metro card — ₹50 credit</div>
+            <div class="reward-desc">Top up your Jaipur Metro card. Encourages sustainable travel.</div>
+            <div class="reward-pts"><div class="pts-cost">300 pts</div><button class="redeem-btn" onclick="redeem(this, 300, 'Metro ₹50 credit')">Redeem</button></div>
+          </div>
+          <div class="reward-card">
+            <div class="reward-brand">☕</div>
+            <div class="reward-name">Starbucks — Free drink</div>
+            <div class="reward-desc">One free handcrafted beverage. Bring your own cup for bonus points!</div>
+            <div class="reward-pts"><div class="pts-cost">500 pts</div><button class="redeem-btn" onclick="redeem(this, 500, 'Starbucks free drink')">Redeem</button></div>
+          </div>
+          <div class="reward-card">
+            <div class="reward-brand">🛒</div>
+            <div class="reward-name">BigBasket — ₹100 off</div>
+            <div class="reward-desc">On fresh fruits and vegetables orders above ₹500.</div>
+            <div class="reward-pts"><div class="pts-cost">250 pts</div><button class="redeem-btn" onclick="redeem(this, 250, 'BigBasket ₹100 off')">Redeem</button></div>
+          </div>
+          <div class="reward-card">
+            <div class="reward-brand">🚴</div>
+            <div class="reward-name">Yulu — 60 min free ride</div>
+            <div class="reward-desc">One hour of free electric cycle rental in your city.</div>
+            <div class="reward-pts"><div class="pts-cost">150 pts</div><button class="redeem-btn" onclick="redeem(this, 150, 'Yulu 60 min free')">Redeem</button></div>
+          </div>
+          <div class="reward-card">
+            <div class="reward-brand">🌱</div>
+            <div class="reward-name">Plant a tree — verified</div>
+            <div class="reward-desc">We plant a verified tree in your name via SankalpTaru. Certificate issued.</div>
+            <div class="reward-pts"><div class="pts-cost">400 pts</div><button class="redeem-btn" onclick="redeem(this, 400, 'Plant a tree')">Redeem</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="grid-2">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Your profile</div>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;margin-top:8px">
+              <div style="width:56px;height:56px;border-radius:50%;background:var(--green-dim);border:2px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--green);font-weight:500">P</div>
+              <div>
+                <div style="font-size:17px;font-weight:500">Priya Gupta</div>
+                <div style="font-size:12px;color:var(--ink3);margin-top:2px">2427030112 · CSE · MUJ Jaipur</div>
+                <div style="margin-top:6px"><span class="vtag vtag-green">94% verified data</span></div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)"><span style="font-size:13px;color:var(--ink2)">Member since</span><span style="font-size:13px">Jan 2026</span></div>
+              <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)"><span style="font-size:13px;color:var(--ink2)">Total CO₂ tracked</span><span style="font-size:13px;color:var(--green)">382 kg</span></div>
+              <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)"><span style="font-size:13px;color:var(--ink2)">Best week</span><span style="font-size:13px">15.2 kg — Week 13</span></div>
+              <div style="display:flex;justify-content:space-between;padding:10px 0"><span style="font-size:13px;color:var(--ink2)">Longest streak</span><span style="font-size:13px">21 days</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Data permissions</div>
+            <div style="display:flex;flex-direction:column;gap:0;margin-top:8px">
+              <div class="act-item"><div class="act-icon" style="background:var(--green-dim);font-size:14px">📍</div><div class="act-info"><div class="act-name">Location / GPS</div><div class="act-time">Travel tracking · Always on</div></div><span class="vtag vtag-green">Active</span></div>
+              <div class="act-item"><div class="act-icon" style="background:var(--green-dim);font-size:14px">💬</div><div class="act-info"><div class="act-name">SMS read (on-device)</div><div class="act-time">Fuel, food, UPI · Never uploaded</div></div><span class="vtag vtag-green">Active</span></div>
+              <div class="act-item"><div class="act-icon" style="background:var(--green-dim);font-size:14px">📱</div><div class="act-info"><div class="act-name">Screen time API</div><div class="act-time">Streaming detection</div></div><span class="vtag vtag-green">Active</span></div>
+              <div class="act-item"><div class="act-icon" style="background:var(--green-dim);font-size:14px">🔔</div><div class="act-info"><div class="act-name">Notifications</div><div class="act-time">Swiggy / Zomato orders</div></div><span class="vtag vtag-green">Active</span></div>
+              <div class="act-item"><div class="act-icon" style="background:rgba(245,158,11,0.1);font-size:14px">⚡</div><div class="act-info"><div class="act-name">DISCOM — Consumer no.</div><div class="act-time">RRECL123456 · Auto-fetch monthly</div></div><span class="vtag vtag-amber">Linked</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Registered vehicles</div>
+            <div style="margin-top:8px">
+              <div class="vehicle-card">
+                <div class="vehicle-icon">🚗</div>
+                <div class="vehicle-info">
+                  <div class="vehicle-name">Hyundai Creta Diesel 2021</div>
+                  <div class="vehicle-detail">BS6 · Diesel · 1.5L CRDi</div>
+                  <div style="margin-top:6px"><span class="vtag vtag-green">Primary vehicle</span></div>
+                </div>
+                <div class="vehicle-ef">
+                  <div class="ef-num">160</div>
+                  <div class="ef-lbl">g CO₂/km (ARAI)</div>
+                </div>
+              </div>
+              <div class="vehicle-card" style="opacity:0.7">
+                <div class="vehicle-icon">🏍️</div>
+                <div class="vehicle-info">
+                  <div class="vehicle-name">Honda Activa 6G</div>
+                  <div class="vehicle-detail">BS6 · Petrol · 109.51cc</div>
+                </div>
+                <div class="vehicle-ef">
+                  <div class="ef-num">42</div>
+                  <div class="ef-lbl">g CO₂/km (ARAI)</div>
+                </div>
+              </div>
+              <button class="calc-btn" style="width:100%;margin-top:8px;background:var(--bg3);color:var(--ink2);border:1px solid var(--line)">+ Add vehicle</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Monthly report — March 2026</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px">
+              <div class="prog-wrap">
+                <div class="prog-label"><span>vs college average (142 kg)</span><span style="color:var(--green)">You: 104 kg ↓ 27%</span></div>
+                <div class="prog-bar"><div class="prog-fill" style="width:73%;background:var(--green)"></div></div>
+              </div>
+              <div class="prog-wrap">
+                <div class="prog-label"><span>vs India average (195 kg)</span><span style="color:var(--green)">You: 104 kg ↓ 47%</span></div>
+                <div class="prog-bar"><div class="prog-fill" style="width:53%;background:var(--green)"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-
-  <button class="reset" onclick="resetData()">Reset</button>
-
-  <canvas id="chart"></canvas>
-
 </div>
 
-<script src="script.js"></script>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
+<script>
+// NAV
+const titles = { dashboard:'Dashboard', calculator:'Calculator', leaderboard:'Leaderboard', insights:'AI Insights', rewards:'Rewards', profile:'Profile' };
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('page-title').textContent = titles[id];
+}
+
+// TOAST
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// CHARTS
+window.addEventListener('load', () => {
+  const gc = { color: '#4ade80', grid: 'rgba(255,255,255,0.04)', text: '#4a4845' };
+  const chartOpts = (yLabel) => ({
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: gc.grid }, ticks: { color: gc.text, font: { family: 'Geist', size: 11 } } },
+      y: { grid: { color: gc.grid }, ticks: { color: gc.text, font: { family: 'Geist', size: 11 } }, title: { display: !!yLabel, text: yLabel, color: gc.text } }
+    }
+  });
+
+  new Chart(document.getElementById('weekChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets: [{
+        data: [4.1, 5.8, 3.2, 4.6, 2.9, 2.1, 3.2],
+        backgroundColor: ['#4ade8044','#f87171aa','#4ade8044','#f59e0b88','#4ade8044','#4ade8088','#f59e0b88'],
+        borderColor: ['#4ade80','#f87171','#4ade80','#f59e0b','#4ade80','#4ade80','#f59e0b'],
+        borderWidth: 1, borderRadius: 4
+      }]
+    },
+    options: chartOpts()
+  });
+
+  new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Travel','Food','Electricity','Streaming'],
+      datasets: [{ data: [36, 48, 16, 4], backgroundColor: ['#f59e0bcc','#f87171cc','#4ade80cc','#60a5facc'], borderWidth: 0 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { color: '#8a8880', font: { family: 'Geist', size: 11 }, padding: 16 } } },
+      cutout: '65%'
+    }
+  });
+
+  new Chart(document.getElementById('compareChart'), {
+    type: 'line',
+    data: {
+      labels: ['W10','W11','W12','W13','W14','W15'],
+      datasets: [
+        { label: 'You', data: [24.1, 21.8, 19.2, 15.2, 20.9, 18.4], borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.08)', tension: 0.4, fill: true, pointBackgroundColor: '#4ade80', pointRadius: 4 },
+        { label: 'College avg', data: [28, 27, 26.5, 26, 25.5, 25], borderColor: '#4a4845', backgroundColor: 'transparent', tension: 0.4, borderDash: [5,5], pointRadius: 0 }
+      ]
+    },
+    options: { ...chartOpts(), plugins: { legend: { display: true, labels: { color: '#8a8880', font: { family: 'Geist', size: 11 } } } } }
+  });
+
+  buildLeaderboard();
+  buildStreak();
+});
+
+// LEADERBOARD
+const students = [
+  { name: 'Arjun Mehta', dept: 'CSE', pts: 1240, color: '#4ade8022', tc: '#4ade80' },
+  { name: 'Sneha Sharma', dept: 'CSE', pts: 1105, color: '#60a5fa22', tc: '#60a5fa' },
+  { name: 'Rohan Gupta', dept: 'CSE', pts: 980, color: '#f59e0b22', tc: '#f59e0b' },
+  { name: 'Aisha Khan', dept: 'CSE', pts: 942, color: '#a78bfa22', tc: '#a78bfa' },
+  { name: 'Dev Patel', dept: 'CSE', pts: 920, color: '#f472b622', tc: '#f472b6' },
+  { name: 'Kritika Jain', dept: 'CSE', pts: 904, color: '#34d39922', tc: '#34d399' },
+  { name: 'Nishant Tiwari', dept: 'CSE', pts: 891, color: '#fb923c22', tc: '#fb923c' },
+  { name: 'Pooja Rao', dept: 'CSE', pts: 878, color: '#e879f922', tc: '#e879f9' },
+  { name: 'Sameer Verma', dept: 'CSE', pts: 862, color: '#2dd4bf22', tc: '#2dd4bf' },
+  { name: 'Tanvi Singh', dept: 'CSE', pts: 855, color: '#facc1522', tc: '#facc15' },
+  { name: 'Vivek Nair', dept: 'CSE', pts: 850, color: '#86efac22', tc: '#86efac' },
+];
+const ranks = ['gold','silver','bronze','','','','','','','',''];
+
+function buildLeaderboard() {
+  const el = document.getElementById('lb-list');
+  const you = { name: 'Priya Gupta (You)', dept: 'CSE', pts: 847 };
+  let html = '';
+  students.forEach((s, i) => {
+    html += `<div class="lb-item">
+      <div class="lb-rank ${ranks[i]}">${i+1}</div>
+      <div class="lb-avatar" style="background:${s.color};color:${s.tc}">${s.name[0]}</div>
+      <div class="lb-info"><div class="lb-name">${s.name}</div><div class="lb-dept">${s.dept}</div></div>
+      <div class="lb-score"><div class="lb-pts">${s.pts}</div><div class="lb-badge">pts</div></div>
+    </div>`;
+  });
+  // insert you at rank 12
+  html += `<div class="lb-item you-row">
+    <div class="lb-rank" style="color:var(--green)">12</div>
+    <div class="lb-avatar" style="background:var(--green-dim);color:var(--green)">P</div>
+    <div class="lb-info"><div class="lb-name" style="color:var(--green)">Priya Gupta (You)</div><div class="lb-dept">CSE</div></div>
+    <div class="lb-score"><div class="lb-pts">${you.pts}</div><div class="lb-badge">pts</div></div>
+  </div>`;
+  el.innerHTML = html;
+}
+
+// STREAK
+function buildStreak() {
+  const el = document.getElementById('streak-days');
+  const days = ['M','T','W','T','F','S','S'];
+  const done = [1,1,1,1,1,1,0];
+  el.innerHTML = days.map((d,i) => `
+    <div style="display:inline-flex;flex-direction:column;align-items:center;gap:4px;margin-right:6px">
+      <div style="width:32px;height:32px;border-radius:8px;background:${done[i]?'var(--green-dim)':'var(--bg3)'};border:1px solid ${done[i]?'var(--green-border)':'var(--line)'};display:flex;align-items:center;justify-content:center;font-size:14px">${done[i]?'✓':''}</div>
+      <span style="font-size:10px;color:var(--ink3)">${d}</span>
+    </div>`).join('');
+}
+
+// VEHICLE FIELD
+function updateVehicleField() {
+  const mode = document.getElementById('mode').value;
+  document.getElementById('vehicle-field').style.display = ['car','bike'].includes(mode) ? 'flex' : 'none';
+}
+
+// CALCULATORS
+const emFactors = { car: null, bike: 75, cng: 45, metro: 10, bus: 30, walk: 0, ev: 5 };
+const foodFactors = { veg: 0.4, 'veg-delivery': 0.65, nonveg: 1.6, 'nonveg-delivery': 2.1, egg: 0.8 };
+
+function calcTravel() {
+  const dist = parseFloat(document.getElementById('dist').value);
+  const mode = document.getElementById('mode').value;
+  if (!dist || dist <= 0) { showToast('Please enter a valid distance'); return; }
+  let ef = emFactors[mode];
+  if (mode === 'car') ef = parseInt(document.getElementById('vehicle').value);
+  if (mode === 'bike') ef = 75;
+  const kg = (dist * ef / 1000).toFixed(2);
+  const res = document.getElementById('travel-result');
+  document.getElementById('travel-num').textContent = kg;
+  document.getElementById('travel-breakdown').innerHTML = `
+    <div class="rb-row"><span>Distance</span><span>${dist} km</span></div>
+    <div class="rb-row"><span>Emission factor</span><span>${ef} g/km</span></div>
+    <div class="rb-row"><span>Total CO₂</span><span>${kg} kg</span></div>
+    <div class="rb-row"><span>Equivalent to</span><span>${(kg*0.6).toFixed(1)} plastic bags</span></div>`;
+  res.classList.add('show');
+  showToast(`<strong>${kg} kg CO₂</strong> calculated for your ${dist} km trip`);
+}
+
+function calcFood() {
+  const type = document.getElementById('meal-type').value;
+  const count = parseInt(document.getElementById('meal-count').value) || 1;
+  const kg = (foodFactors[type] * count).toFixed(2);
+  const res = document.getElementById('food-result');
+  document.getElementById('food-num').textContent = kg;
+  const names = { veg:'Veg (home)', 'veg-delivery':'Veg (delivery)', nonveg:'Non-veg (home)', 'nonveg-delivery':'Non-veg (delivery)', egg:'Egg-based' };
+  document.getElementById('food-breakdown').innerHTML = `
+    <div class="rb-row"><span>Meal type</span><span>${names[type]}</span></div>
+    <div class="rb-row"><span>Meals</span><span>${count}</span></div>
+    <div class="rb-row"><span>Factor per meal</span><span>${foodFactors[type]} kg CO₂</span></div>
+    <div class="rb-row"><span>Total</span><span>${kg} kg CO₂</span></div>`;
+  res.classList.add('show');
+  showToast(`<strong>${kg} kg CO₂</strong> from your food today`);
+}
+
+function calcElec() {
+  const kwh = parseFloat(document.getElementById('kwh').value);
+  const factor = parseFloat(document.getElementById('state').value);
+  if (!kwh || kwh <= 0) { showToast('Please enter kWh units'); return; }
+  const kg = (kwh * factor).toFixed(1);
+  const daily = (kwh * factor / 30).toFixed(2);
+  const res = document.getElementById('elec-result');
+  document.getElementById('elec-num').textContent = kg;
+  document.getElementById('elec-breakdown').innerHTML = `
+    <div class="rb-row"><span>Monthly units</span><span>${kwh} kWh</span></div>
+    <div class="rb-row"><span>Grid factor</span><span>${factor} kg/kWh</span></div>
+    <div class="rb-row"><span>Monthly CO₂</span><span>${kg} kg</span></div>
+    <div class="rb-row"><span>Daily average</span><span>${daily} kg/day</span></div>`;
+  res.classList.add('show');
+  showToast(`<strong>${kg} kg CO₂/month</strong> from your electricity`);
+}
+
+// REDEEM
+let points = 847;
+function redeem(btn, cost, name) {
+  if (points < cost) { showToast(`Not enough points. You have <strong>${points} pts</strong>`); return; }
+  points -= cost;
+  document.querySelector('.score-pill span').textContent = points;
+  document.getElementById('top-score').textContent = points;
+  btn.textContent = 'Redeemed ✓';
+  btn.disabled = true;
+  showToast(`<strong>${name}</strong> redeemed! Check your email for the coupon.`);
+}
+</script>
 </body>
 </html>
