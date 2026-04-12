@@ -1,231 +1,466 @@
 <!DOCTYPE html>
-<!-- saved from url=(0063)https://adityasinha-1988.github.io/pblcse/pbl_ppt_template.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PBL Presentation | 2026</title>
-    
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --bg: #0e0e0e;
+  --bg2: #141414;
+  --bg3: #1a1a1a;
+  --ink: #f0ede8;
+  --ink2: #8a8880;
+  --ink3: #4a4845;
+  --green: #4ade80;
+  --green-dim: #22543d;
+  --green-subtle: rgba(74,222,128,0.08);
+  --line: rgba(255,255,255,0.07);
+  --serif: 'Instrument Serif', serif;
+  --sans: 'Geist', sans-serif;
+}
 
-    <link rel="stylesheet" href="./index_files/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { background-color: #020617; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .gradient-text { background: linear-gradient(90deg, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        /* TIMER UI - FIXED CONTRAST */
-        #timerContainer { background: #ffffff; color: #020617; box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 3px solid #3b82f6; z-index: 1000; }
-        @keyframes flicker { 0%, 100% { background-color: #ffffff; } 50% { background-color: #fca5a5; } }
-        .timer-warning { animation: flicker 1s infinite; border: 3px solid #ef4444 !important; color: #b91c1c !important; }
-        .timer-stop { background-color: #991b1b !important; color: #ffffff !important; border: 3px solid #f87171 !important; animation: none; }
-    </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.bottom-10{bottom:2.5rem}.right-10{right:2.5rem}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mt-1{margin-top:0.25rem}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-80{height:20rem}.h-full{height:100%}.w-auto{width:auto}.w-full{width:100%}.max-w-2xl{max-width:42rem}.max-w-6xl{max-width:72rem}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.items-stretch{align-items:stretch}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-10{gap:2.5rem}.gap-12{gap:3rem}.gap-16{gap:4rem}.gap-4{gap:1rem}.gap-8{gap:2rem}.space-y-12 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(3rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(3rem * var(--tw-space-y-reverse))}.space-y-32 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(8rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(8rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-\[2\.5rem\]{border-radius:2.5rem}.rounded-\[2rem\]{border-radius:2rem}.rounded-\[3\.5rem\]{border-radius:3.5rem}.rounded-full{border-radius:9999px}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-b-4{border-bottom-width:4px}.border-l-2{border-left-width:2px}.border-l-4{border-left-width:4px}.border-r-4{border-right-width:4px}.border-t{border-top-width:1px}.border-t-4{border-top-width:4px}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-blue-500\/30{border-color:rgb(59 130 246 / 0.3)}.border-blue-500\/50{border-color:rgb(59 130 246 / 0.5)}.border-blue-600{--tw-border-opacity:1;border-color:rgb(37 99 235 / var(--tw-border-opacity, 1))}.border-green-500\/20{border-color:rgb(34 197 94 / 0.2)}.border-purple-500\/50{border-color:rgb(168 85 247 / 0.5)}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.border-slate-800\/50{border-color:rgb(30 41 59 / 0.5)}.border-slate-900{--tw-border-opacity:1;border-color:rgb(15 23 42 / var(--tw-border-opacity, 1))}.border-white\/10{border-color:rgb(255 255 255 / 0.1)}.bg-black\/40{background-color:rgb(0 0 0 / 0.4)}.bg-green-500\/5{background-color:rgb(34 197 94 / 0.05)}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/5{background-color:rgb(255 255 255 / 0.05)}.object-contain{object-fit:contain}.p-1{padding:0.25rem}.p-10{padding:2.5rem}.p-12{padding:3rem}.p-6{padding:1.5rem}.p-7{padding:1.75rem}.p-8{padding:2rem}.px-12{padding-left:3rem;padding-right:3rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-32{padding-bottom:8rem}.pl-6{padding-left:1.5rem}.pt-10{padding-top:2.5rem}.pt-48{padding-top:12rem}.text-left{text-align:left}.text-center{text-align:center}.text-justify{text-align:justify}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-6xl{font-size:3.75rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[9px\]{font-size:9px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.tracking-\[0\.2em\]{letter-spacing:0.2em}.tracking-\[0\.3em\]{letter-spacing:0.3em}.tracking-\[0\.5em\]{letter-spacing:0.5em}.tracking-tight{letter-spacing:-0.025em}.tracking-tighter{letter-spacing:-0.05em}.tracking-widest{letter-spacing:0.1em}.text-blue-400{--tw-text-opacity:1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-green-400{--tw-text-opacity:1;color:rgb(74 222 128 / var(--tw-text-opacity, 1))}.text-green-500{--tw-text-opacity:1;color:rgb(34 197 94 / var(--tw-text-opacity, 1))}.text-purple-400{--tw-text-opacity:1;color:rgb(192 132 252 / var(--tw-text-opacity, 1))}.text-purple-500{--tw-text-opacity:1;color:rgb(168 85 247 / var(--tw-text-opacity, 1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.opacity-50{opacity:0.5}.opacity-70{opacity:0.7}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-green-900\/40{--tw-shadow-color:rgb(20 83 45 / 0.4);--tw-shadow:var(--tw-shadow-colored)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-green-500:hover{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.hover\:text-blue-400:hover{--tw-text-opacity:1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}@media (min-width: 768px){.md\:flex{display:flex}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:text-7xl{font-size:4.5rem;line-height:1}}</style></head>
-<body onload="startTimer()">
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  font-weight: 300;
+  overflow-x: hidden;
+}
 
-    <div id="timerContainer" class="fixed bottom-10 right-10 px-8 py-4 rounded-3xl flex items-center gap-4 transition-all">
-        <i class="fas fa-hourglass-start text-blue-600 text-2xl" id="timerIcon"></i>
-        <span id="displayTime" class="text-4xl font-black font-mono tracking-tighter">00:00</span>
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 56px;
+  background: rgba(14,14,14,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+}
+.logo { font-family: var(--serif); font-size: 20px; color: var(--ink); }
+.logo em { font-style: italic; color: var(--green); }
+.nav-links { display: flex; gap: 36px; }
+.nav-links a { font-size: 13px; color: var(--ink2); text-decoration: none; transition: color 0.2s; font-weight: 400; }
+.nav-links a:hover { color: var(--ink); }
+.nav-pill {
+  font-size: 11px; font-weight: 400;
+  background: var(--green-subtle);
+  border: 1px solid rgba(74,222,128,0.2);
+  color: var(--green);
+  padding: 5px 14px; border-radius: 100px;
+  letter-spacing: 0.3px;
+}
 
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 56px 72px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
 
-    </div>
+.hero-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(74,222,128,0.07) 0%, transparent 70%);
+  top: 10%; right: -10%;
+  pointer-events: none;
+}
 
-    <nav class="fixed w-full z-50 glass border-b border-slate-800/50 px-8 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <div class="bg-white p-1 rounded flex items-center justify-center shadow-md" style="height: 48px; width: 48px;">
-                <img src="./index_files/mujlogo.jpg" alt="MUJ" class="h-full w-auto object-contain" onerror="this.src=&#39;https://via.placeholder.com/50?text=MUJ&#39;">
-            </div>
-            <div class="flex flex-col text-left">
-                <span class="text-xl font-black text-white leading-none uppercase tracking-tighter">PBL <span class="text-blue-500 italic">2026</span></span>
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">Dept. of Computer Science &amp; Engineering</span>
-            </div>
-        </div>
-        <div class="hidden md:flex gap-8 text-[11px] uppercase tracking-widest font-bold opacity-70">
-            <a href="https://adityasinha-1988.github.io/pblcse/pbl_ppt_template.html#problem" class="hover:text-blue-400 transition">Problem</a>
-            <a href="https://adityasinha-1988.github.io/pblcse/pbl_ppt_template.html#methodology" class="hover:text-blue-400 transition">Methodology</a>
-            <a href="https://adityasinha-1988.github.io/pblcse/pbl_ppt_template.html#results" class="hover:text-blue-400 transition">Results</a>
-            <a href="https://adityasinha-1988.github.io/pblcse/pbl_ppt_template.html#team" class="hover:text-blue-400 transition">Team</a>
-        </div>
-    </nav>
+.hero-top {
+  position: absolute; top: 96px; left: 56px; right: 56px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.hero-badge {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--green); font-weight: 400; letter-spacing: 0.3px;
+  opacity: 0; animation: up 0.7s 0.1s ease forwards;
+}
+.hero-badge::before {
+  content: ''; width: 6px; height: 6px;
+  background: var(--green); border-radius: 50%;
+  animation: blink 2.5s ease infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.hero-id { font-size: 12px; color: var(--ink3); opacity: 0; animation: up 0.7s 0.15s ease forwards; }
 
-    <main class="max-w-6xl mx-auto px-6 pt-48 pb-32 space-y-32">
-        
-        <section class="text-center">
-            <div class="inline-block px-4 py-1 border border-slate-800 rounded-full text-slate-500 text-[10px] font-mono mb-6 uppercase tracking-widest">ID: 2427030112</div>
-            <h1 class="text-6xl md:text-7xl font-extrabold mb-8 uppercase leading-tight"><span class="gradient-text uppercase">EcoTrack: Smart Carbon & Eco-Routing System</span></h1>
-            <p class="text-slate-400 max-w-2xl mx-auto italic text-lg leading-relaxed border-l-2 border-blue-500/30 pl-6 text-left">
-                ""To design an intelligent system that estimates individual carbon footprint from travel and daily activities, and optimizes route selection to promote sustainable decision-making."
-"
-            </p>
-        </section>
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(64px, 9.5vw, 128px);
+  font-weight: 400;
+  line-height: 0.93;
+  letter-spacing: -3px;
+  opacity: 0; animation: up 0.8s 0.2s ease forwards;
+}
+.hero h1 em { font-style: italic; color: var(--green); }
 
-        <section id="problem" class="grid md:grid-cols-2 gap-12 items-stretch">
-            <div class="glass p-10 rounded-[2.5rem] flex flex-col justify-center border-l-4 border-blue-600">
-                <h2 class="text-3xl font-extrabold mb-6">Problem Statement</h2>
-                <p class="text-slate-400 leading-relaxed text-justify">Individuals contribute significantly to carbon emissions through daily travel and lifestyle choices, yet most remain unaware of their personal carbon footprint. Existing navigation systems prioritize fastest or shortest routes without considering environmental impact. There is a lack of integrated platforms that both measure individual carbon emissions and provide actionable eco-friendly alternatives.
-</p>
-            </div>
-            <div class="space-y-6">
-                <div class="glass p-7 rounded-3xl border-r-4 border-blue-500/50">
-                    <h3 class="text-blue-400 font-bold text-xs uppercase tracking-widest mb-2">Literature Review / Market Research</h3>
-                    <p class="text-sm text-slate-500 italic">Existing navigation systems such as Google Maps focus primarily on minimizing travel time and distance rather than carbon emissions. Traditional carbon footprint calculators provide generic annual estimates but are not integrated with real-time travel behavior. Current solutions lack personalization, eco-routing integration, and behavioral motivation mechanisms.
-</p>
-                </div>
-                <div class="glass p-7 rounded-3xl border-r-4 border-purple-500/50">
-                    <h3 class="text-purple-400 font-bold text-xs uppercase tracking-widest mb-2">Research Gap / Innovation</h3>
-                    <p class="text-sm text-slate-500 italic">The proposed system bridges the gap between carbon footprint tracking and intelligent route optimization. Unlike existing tools, it provides personalized emission estimates based on daily travel and activities, suggests eco-friendly routes, and incorporates gamification to encourage sustainable behavior change.
-</p>
-                </div>
-            </div>
-        </section>
+.hero-row {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-top: 48px; padding-top: 36px;
+  border-top: 1px solid var(--line);
+  opacity: 0; animation: up 0.8s 0.35s ease forwards;
+}
+.hero-desc { max-width: 380px; font-size: 15px; color: var(--ink2); line-height: 1.75; }
+.hero-stats { display: flex; gap: 44px; }
+.hs { text-align: right; }
+.hs-n { font-family: var(--serif); font-size: 38px; color: var(--green); letter-spacing: -1px; line-height: 1; }
+.hs-l { font-size: 12px; color: var(--ink3); margin-top: 4px; font-weight: 400; }
 
-        <section id="methodology" class="space-y-12">
-            <h2 class="text-4xl font-black text-center uppercase tracking-tight">System <span class="text-blue-500">Methodology</span></h2>
-            <div class="grid md:grid-cols-4 gap-8">
-                <div class="glass p-8 rounded-3xl text-center">
-                    <i class="fas fa-database text-blue-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">Dataset / Input</h3>
-                    <p class="text-sm text-slate-500">The system collects user travel inputs such as source, destination, mode of transport, and vehicle type. Route distance and travel data are obtained using mapping APIs. Emission factors are applied based on transport mode and fuel type to estimate CO₂ emissions per route.
-</p>
-                </div>
-                <div class="glass p-8 rounded-3xl text-center">
-                    <i class="fas fa-microchip text-purple-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">Model / Architecture</h3>
-                    <p class="text-sm text-slate-500">
+@keyframes up {
+  from { opacity:0; transform: translateY(20px); }
+  to { opacity:1; transform: translateY(0); }
+}
 
-The system consists of two integrated modules: a Carbon Emission Calculator and an Eco-Routing Engine. The carbon calculator estimates daily emissions using distance and emission factors. The eco-routing engine retrieves multiple possible routes, calculates emissions for each route, compares them, and recommends the lowest-emission path. The selected route updates the user’s daily carbon footprint and sustainability score.
-</p>
+/* SECTION COMMON */
+section { padding: 96px 56px; border-bottom: 1px solid var(--line); }
+.sec-label {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--ink3); font-weight: 400; margin-bottom: 56px;
+  display: flex; align-items: center; gap: 14px;
+}
+.sec-label::before { content:''; width: 20px; height: 1px; background: var(--green); }
+.sec-title {
+  font-family: var(--serif);
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 400; letter-spacing: -1.5px; line-height: 1.05;
+}
+.sec-title em { font-style: italic; color: var(--green); }
 
-                </div>
-                <div class="glass p-8 rounded-3xl text-center border-2 border-green-500/20 bg-green-500/5">
-                    <i class="fab fa-python text-green-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-4 uppercase text-xs tracking-widest text-green-400">Live Execution</h3>
-                    <div style="text-align:center; margin-top:30px;">
-  <a href="Eco_track.html" target="_blank">Live Execution</a>
-    <button style="padding:10px 20px; font-size:16px; cursor:pointer;">
-      🌱 Open EcoTrack
+/* PROBLEM */
+.prob-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-top: 60px; }
+.prob-copy p { font-size: 15px; color: var(--ink2); line-height: 1.75; margin-top: 20px; max-width: 360px; }
+.prob-items { display: flex; flex-direction: column; }
+.prob-item {
+  display: grid; grid-template-columns: 32px 1fr; gap: 16px;
+  padding: 28px 0; border-bottom: 1px solid var(--line);
+  transition: padding-left 0.3s;
+}
+.prob-item:hover { padding-left: 8px; }
+.prob-item:first-child { border-top: 1px solid var(--line); }
+.pi-n { font-family: var(--serif); font-size: 14px; color: var(--ink3); font-style: italic; padding-top: 2px; }
+.prob-item h3 { font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--ink); }
+.prob-item p { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+/* FEATURES */
+.feat-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--line);
+  margin-top: 56px;
+}
+.feat {
+  padding: 36px 32px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  transition: background 0.25s;
+  position: relative; overflow: hidden;
+}
+.feat::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--green); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.feat:hover { background: var(--bg3); }
+.feat:hover::before { transform: scaleX(1); }
+.feat:nth-child(3n) { border-right: none; }
+.feat.wide { grid-column: span 2; }
+.feat-n { font-size: 11px; letter-spacing: 1.5px; color: var(--ink3); margin-bottom: 28px; font-weight: 400; }
+.feat h3 { font-family: var(--serif); font-size: 21px; font-weight: 400; letter-spacing: -0.3px; margin-bottom: 12px; line-height: 1.2; }
+.feat h3 em { font-style: italic; color: var(--green); }
+.feat p { font-size: 13px; color: var(--ink2); line-height: 1.7; }
+.feat-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+.tag {
+  font-size: 11px; color: var(--green); border: 1px solid rgba(74,222,128,0.2);
+  background: var(--green-subtle); padding: 3px 10px; border-radius: 100px; font-weight: 400;
+}
+
+/* HOW IT WORKS */
+.how-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  border: 1px solid var(--line); margin-top: 56px;
+}
+.step { padding: 36px 28px; border-right: 1px solid var(--line); }
+.step:last-child { border-right: none; }
+.step-n {
+  font-family: var(--serif); font-size: 52px; color: var(--ink3);
+  line-height: 1; margin-bottom: 24px; font-style: italic;
+}
+.step h3 { font-size: 14px; font-weight: 500; margin-bottom: 10px; color: var(--ink); }
+.step p { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+/* DATA */
+.data-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  border: 1px solid var(--line); margin-top: 56px;
+}
+.dc {
+  padding: 32px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  transition: background 0.2s;
+}
+.dc:hover { background: var(--bg3); }
+.dc:nth-child(3n) { border-right: none; }
+.dc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.dc h3 { font-size: 14px; font-weight: 500; }
+.dc p { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+.vbadge {
+  font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--green); background: var(--green-subtle);
+  border: 1px solid rgba(74,222,128,0.2); padding: 3px 8px; border-radius: 100px; font-weight: 500;
+}
+.vbadge.amber { color: #f59e0b; background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.2); }
+
+/* WHY */
+.why-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-top: 60px; }
+.why-quote {
+  font-family: var(--serif); font-size: clamp(22px, 2.2vw, 28px);
+  line-height: 1.45; color: var(--ink); letter-spacing: -0.3px;
+  padding: 36px; background: var(--bg3); border: 1px solid var(--line);
+  border-radius: 2px; border-left: 2px solid var(--green);
+}
+.why-quote em { font-style: italic; color: var(--green); }
+.why-pts { display: flex; flex-direction: column; }
+.why-pt {
+  display: grid; grid-template-columns: 28px 1fr; gap: 16px;
+  padding: 24px 0; border-bottom: 1px solid var(--line);
+}
+.why-pt:first-child { border-top: 1px solid var(--line); }
+.wp-n { font-family: var(--serif); font-size: 13px; color: var(--ink3); font-style: italic; padding-top: 2px; }
+.why-pt h3 { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.why-pt p { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+/* TECH */
+.tech-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  border: 1px solid var(--line); margin-top: 56px;
+}
+.tc {
+  padding: 28px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  transition: background 0.2s;
+}
+.tc:hover { background: var(--bg3); }
+.tc:nth-child(4n) { border-right: none; }
+.tc-layer { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+.tc-name { font-family: var(--serif); font-size: 20px; color: var(--ink); margin-bottom: 6px; }
+.tc-desc { font-size: 12px; color: var(--ink3); line-height: 1.5; }
+
+/* FOOTER */
+footer {
+  padding: 64px 56px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.fl-logo { font-family: var(--serif); font-size: 40px; letter-spacing: -1.5px; line-height: 1; margin-bottom: 8px; }
+.fl-logo em { font-style: italic; color: var(--green); }
+.fl-sub { font-size: 13px; color: var(--ink3); }
+.fr { text-align: right; }
+.fr p { font-size: 13px; color: var(--ink2); margin-bottom: 4px; }
+.fr small { font-size: 11px; color: var(--ink3); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Eco<em>Track</em></div>
+  <div class="nav-links">
+    <a href="#problem">Problem</a>
+    <a href="#features">Features</a>
+    <a href="#how">Process</a>
+    <a href="#data">Data</a>
+    <a href="#tech">Stack</a>
+  </div>
+  <div class="nav-pill">PBL 2026 · MUJ</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-top">
+    <div class="hero-badge">Carbon Intelligence System</div>
+    <div class="hero-id">ID — 2427030112</div>
+  </div>
+  <h1>Live your life.<br><em>Track the rest.</em></h1>
+    <a href="Eco_track.html" style="
+display:inline-block;
+margin-top:20px;
+background:#4ade80;
+color:#0e0e0e;
+padding:12px 24px;
+border-radius:25px;
+text-decoration:none;
+font-size:14px;
+font-weight:500;">
+Launch EcoTrack →
 </a>
-                </div>
-                <div class="glass p-8 rounded-3xl text-center">
-    <i class="fas fa-project-diagram text-blue-400 text-3xl mb-4"></i>
-    <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">
-        System Workflow
-    </h3>
-    <p class="text-sm text-slate-500">
-        User Input → Fetch Routes → Calculate Emissions → Compare Routes → Select Eco Route → Update Carbon Score → Display Result
-    </p>
-</div>
+  <div class="hero-row">
+    <p class="hero-desc">A passive carbon tracking system that reads your travel, food, transactions, and screen time — automatically. No manual input. No guilt. Just data.</p>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-n">6+</div><div class="hs-l">Passive sources</div></div>
+      <div class="hs"><div class="hs-n">0</div><div class="hs-l">Manual inputs</div></div>
+      <div class="hs"><div class="hs-n">↓30%</div><div class="hs-l">Avg. emissions</div></div>
+    </div>
+  </div>
+</section>
 
-            </div>
-        </section>
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="sec-label reveal">The problem</div>
+  <div class="prob-layout reveal">
+    <div class="prob-copy">
+      <h2 class="sec-title">People know.<br><em>They just don't act.</em></h2>
+      <p>Awareness isn't the bottleneck. The missing piece is a personal, immediate, social reason to care today — not in 2050. We use behavioural science to bridge that gap.</p>
+    </div>
+    <div class="prob-items">
+      <div class="prob-item">
+        <div class="pi-n">i.</div>
+        <div><h3>Existing apps need manual input</h3><p>Nobody logs their commute every morning. Self-reported data is unreliable, tedious, and gameable.</p></div>
+      </div>
+      <div class="prob-item">
+        <div class="pi-n">ii.</div>
+        <div><h3>Google Maps already does eco-routing</h3><p>Competing on routing is pointless. We track your whole lifestyle — travel, food, electricity, screen time.</p></div>
+      </div>
+      <div class="prob-item">
+        <div class="pi-n">iii.</div>
+        <div><h3>No financial or social incentive</h3><p>Environmental guilt doesn't change behaviour. Money and peer pressure do. We use both.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <section id="results" class="glass p-12 rounded-[3.5rem] border-t-4 border-blue-500">
-            <h2 class="text-3xl font-black mb-12 text-center uppercase tracking-tight">Results &amp; <span class="text-blue-500">Analysis</span></h2>
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div class="h-80"><canvas id="resultsChart" width="565" height="384" style="display: block; box-sizing: border-box; height: 320px; width: 471.2px;"></canvas></div>
-                <div class="space-y-6">
-                    <div class="p-6 rounded-2xl bg-white/5 flex justify-between items-center border border-white/10 shadow-inner">
-                        <span class="text-slate-400 font-bold uppercase text-xs tracking-widest">EMISSION REDUCTION IMPACT
-</span>
-                        <span class="text-blue-400 font-mono font-black text-3xl">20–30% Estimated Reduction
-</span>
-                    </div>
-                    <p class="text-slate-500 text-sm italic text-justify leading-relaxed">The graph illustrates a comparative analysis between a conventional fastest route and the eco-optimized route recommended by our system. The eco-route demonstrates lower estimated CO₂ emissions due to reduced congestion and smoother traffic conditions.
+<!-- FEATURES -->
+<section id="features" style="background:var(--bg2);">
+  <div class="sec-label reveal">Features</div>
+  <h2 class="sec-title reveal">Everything.<br><em>Automated.</em></h2>
+  <div class="feat-grid reveal">
+    <div class="feat wide">
+      <div class="feat-n">01 — CORE FEATURE</div>
+      <h3>Vehicle-<em>personalised</em> travel tracking</h3>
+      <p>Register your car once — make, model, year, fuel type. GPS detects movement, fuel purchase SMS confirms the trip, and we calculate your actual CO₂ using ARAI emission factors. Not a generic estimate. Your car, your number.</p>
+      <div class="feat-tags"><span class="tag">GPS</span><span class="tag">Fuel SMS</span><span class="tag">ARAI data</span><span class="tag">Fastag</span></div>
+    </div>
+    <div class="feat">
+      <div class="feat-n">02</div>
+      <h3>Food order <em>intelligence</em></h3>
+      <p>Swiggy / Zomato SMS parsed on-device. Items auto-classified veg or non-veg via keyword matching. No input, no faking.</p>
+      <div class="feat-tags"><span class="tag">SMS parsing</span><span class="tag">On-device</span></div>
+    </div>
+    <div class="feat">
+      <div class="feat-n">03</div>
+      <h3>Screen time &amp; <em>streaming</em></h3>
+      <p>Digital Wellbeing API tracks streaming hours passively. Netflix, YouTube, Reels — all have a server energy cost we calculate automatically.</p>
+      <div class="feat-tags"><span class="tag">Digital Wellbeing</span><span class="tag">Zero input</span></div>
+    </div>
+    <div class="feat">
+      <div class="feat-n">04</div>
+      <h3>Smart transaction <em>detection</em></h3>
+      <p>Bank SMS parsed locally. High-carbon merchants flagged automatically — Uber, Ola, Amazon, Zomato. Everything else gets a baseline score.</p>
+      <div class="feat-tags"><span class="tag">On-device</span><span class="tag">Merchant detection</span></div>
+    </div>
+    <div class="feat">
+      <div class="feat-n">05</div>
+      <h3>Electricity <em>auto-fetch</em></h3>
+      <p>Enter DISCOM consumer number once. Monthly bill fetched in the background. India grid: 0.82 kg CO₂/kWh. Never ask again.</p>
+      <div class="feat-tags"><span class="tag">DISCOM API</span><span class="tag">One-time</span></div>
+    </div>
+    <div class="feat">
+      <div class="feat-n">06</div>
+      <h3>Social leaderboard <em>+ rewards</em></h3>
+      <p>Compete within your college. Verified data earns redeemable carbon points. Unverified data earns partial points — no coupon access.</p>
+      <div class="feat-tags"><span class="tag">Peer leaderboard</span><span class="tag">Carbon coupons</span></div>
+    </div>
+    <div class="feat wide">
+      <div class="feat-n">07 — AI LAYER</div>
+      <h3>Weekly AI carbon <em>insight</em></h3>
+      <p>Claude API generates a personalised tip every Sunday specific to your actual data. Not generic advice — something like: "Your Tuesday Uber added 1.4kg. Metro twice a week saves ₹600/month and 8kg CO₂." Environmental impact, framed as money. The most motivating framing possible.</p>
+      <div class="feat-tags"><span class="tag">Claude API</span><span class="tag">Financial framing</span><span class="tag">Carbon Wrapped</span><span class="tag">Weekly</span></div>
+    </div>
+  </div>
+</section>
 
-</p>
-                </div>
-            </div>
-        </section>
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="sec-label reveal">Process</div>
+  <h2 class="sec-title reveal">Set up once.<br><em>Runs forever.</em></h2>
+  <div class="how-grid reveal">
+    <div class="step"><div class="step-n">1</div><h3>Register profile</h3><p>Add vehicle, DISCOM number, and grant SMS + location permission once during onboarding.</p></div>
+    <div class="step"><div class="step-n">2</div><h3>Live passively</h3><p>App runs in background. GPS, SMS, notifications, and screen time tracked with zero daily effort.</p></div>
+    <div class="step"><div class="step-n">3</div><h3>Get your score</h3><p>Daily carbon score from all verified sources. Weekly AI insight every Sunday morning.</p></div>
+    <div class="step"><div class="step-n">4</div><h3>Compete & redeem</h3><p>Climb the college leaderboard. Redeem verified carbon points for real discounts with partners.</p></div>
+  </div>
+</section>
 
-        <section id="team" class="text-center pt-10 border-t border-slate-900">
-            <h2 class="text-[10px] font-black text-slate-600 uppercase tracking-[0.5em] mb-12">Academic Credits</h2>
-            <div class="flex flex-wrap justify-center gap-10">
-                <div class="glass px-12 py-8 rounded-[2rem] border-b-4 border-blue-600">
-                    <p class="text-[9px] font-bold text-blue-500 mb-2 uppercase tracking-widest">Project Guide</p>
-                    <p class="font-black text-xl text-slate-100">Dr. Bali Devi</p>
-                </div>
-                <div class="glass px-12 py-8 rounded-[2rem] border-b-4 border-slate-700">
-                    <p class="text-[9px] font-bold text-slate-400 mb-2 uppercase tracking-widest">Developed By</p>
-                    <p class="font-black text-xl text-slate-100">Priya Gupta</p>
-                    <p class="text-[10px] text-slate-500 mt-1">2427030112</p>
-                </div>
-            </div>
-        </section>
-    </main>
+<!-- DATA -->
+<section id="data" style="background:var(--bg2);">
+  <div class="sec-label reveal">Data integrity</div>
+  <h2 class="sec-title reveal">Fraud-proof<br><em>by design.</em></h2>
+  <p class="reveal" style="color:var(--ink2);font-size:14px;margin-top:12px;max-width:440px;font-weight:300;">Permissions are optional — but only verified data unlocks coupons. Users choose their level of trust.</p>
+  <div class="data-grid reveal">
+    <div class="dc"><div class="dc-top"><h3>GPS + fuel SMS</h3><span class="vbadge">Verified</span></div><p>GPS confirms movement. Fuel SMS from HPCL/IOCL confirms actual vehicle use — more accurate than distance-based estimates.</p></div>
+    <div class="dc"><div class="dc-top"><h3>Food order SMS</h3><span class="vbadge">Verified</span></div><p>Swiggy/Zomato SMS parsed on-device. Items keyword-matched to veg/non-veg. No user input, no way to fake it.</p></div>
+    <div class="dc"><div class="dc-top"><h3>Screen time API</h3><span class="vbadge">Verified</span></div><p>Android Digital Wellbeing — OS-level data, tamper-proof. Converted to server energy emissions automatically.</p></div>
+    <div class="dc"><div class="dc-top"><h3>UPI + merchant SMS</h3><span class="vbadge amber">Partial</span></div><p>Bank SMS parsed locally. High-carbon merchants auto-flagged. Unclassified transactions get a small flat-rate score.</p></div>
+    <div class="dc"><div class="dc-top"><h3>Electricity — DISCOM</h3><span class="vbadge">Verified</span></div><p>Government API fetch via consumer number. Monthly units pulled directly — no user-reported estimates.</p></div>
+    <div class="dc"><div class="dc-top"><h3>On-device privacy</h3><span class="vbadge">Privacy-first</span></div><p>All SMS parsing happens locally. Raw SMS never leaves your phone. Only the calculated emission value hits our server.</p></div>
+  </div>
+</section>
 
-    <footer class="py-12 text-center bg-black/40 border-t border-slate-900">
-        <p class="text-slate-600 text-[10px] font-bold tracking-[0.3em] uppercase mb-2">Manipal University Jaipur</p>
-        <p class="text-slate-500 text-[9px] font-medium tracking-[0.2em] uppercase opacity-50">Department of Computer Science &amp; Engineering • 2026</p>
-    </footer>
+<!-- WHY -->
+<section id="why">
+  <div class="sec-label reveal">The why</div>
+  <div class="why-layout reveal">
+    <div class="why-quote">"People don't lack awareness — they lack a <em>personal, social, and financial reason</em> to act on it today."</div>
+    <div class="why-pts">
+      <div class="why-pt"><div class="wp-n">i.</div><div><h3>Social pressure works</h3><p>A named leaderboard within your college creates real peer accountability — not abstract global guilt.</p></div></div>
+      <div class="why-pt"><div class="wp-n">ii.</div><div><h3>Financial framing converts</h3><p>"Metro twice a week saves ₹600/month" lands harder than any CO₂ statistic. We frame in rupees first.</p></div></div>
+      <div class="why-pt"><div class="wp-n">iii.</div><div><h3>Identity drives sharing</h3><p>A weekly Carbon Wrapped — shareable like Spotify Wrapped — turns your footprint into something people post.</p></div></div>
+      <div class="why-pt"><div class="wp-n">iv.</div><div><h3>Institutional potential</h3><p>Flip the target to colleges or companies — a campus carbon audit is a natural B2B extension.</p></div></div>
+    </div>
+  </div>
+</section>
 
-    <script>
-    // TIMER LOGIC
-    let sec = 0;
-    let timer = null;
+<!-- TECH -->
+<section id="tech" style="background:var(--bg2);">
+  <div class="sec-label reveal">Tech stack</div>
+  <h2 class="sec-title reveal">Built to<br><em>scale.</em></h2>
+  <div class="tech-grid reveal">
+    <div class="tc"><div class="tc-layer">Frontend</div><div class="tc-name">React Native</div><div class="tc-desc">Cross-platform mobile + web dashboard</div></div>
+    <div class="tc"><div class="tc-layer">Backend</div><div class="tc-name">Node.js</div><div class="tc-desc">Express REST API with JWT auth</div></div>
+    <div class="tc"><div class="tc-layer">Database</div><div class="tc-name">MongoDB</div><div class="tc-desc">User profiles, activity logs, scores</div></div>
+    <div class="tc"><div class="tc-layer">AI</div><div class="tc-name">Claude API</div><div class="tc-desc">Personalised weekly carbon insights</div></div>
+    <div class="tc"><div class="tc-layer">Maps</div><div class="tc-name">Google Maps</div><div class="tc-desc">Route distance + transport classification</div></div>
+    <div class="tc"><div class="tc-layer">Emission data</div><div class="tc-name">ARAI / IPCC</div><div class="tc-desc">Verified Indian vehicle emission factors</div></div>
+    <div class="tc"><div class="tc-layer">Device APIs</div><div class="tc-name">Android SDK</div><div class="tc-desc">SMS, Digital Wellbeing, GPS, Notifications</div></div>
+    <div class="tc"><div class="tc-layer">Electricity</div><div class="tc-name">DISCOM API</div><div class="tc-desc">State electricity board integration</div></div>
+  </div>
+</section>
 
-    function startTimer() {
-        timer = setInterval(() => {
-            sec++;
-            let m = Math.floor(sec / 60);
-            let s = sec % 60;
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="fl-logo">Eco<em>Track</em></div>
+    <p class="fl-sub">Carbon Intelligence System · PBL 2026</p>
+  </div>
+  <div class="fr">
+    <p>Priya Gupta — 2427030112</p>
+    <p>Guide: Dr. Bali Devi</p>
+    <small>Dept. of CSE · Manipal University Jaipur</small>
+  </div>
+</footer>
 
-            document.getElementById('displayTime').innerText =
-                `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-
-            if (sec >= 480 && sec < 600) {
-                document.getElementById('timerContainer').classList.add('timer-warning');
-                document.getElementById('timerIcon').classList.replace('fa-hourglass-start', 'fa-hourglass-half');
-            } 
-            else if (sec >= 600) {
-                clearInterval(timer);
-                document.getElementById('timerContainer').classList.replace('timer-warning', 'timer-stop');
-                document.getElementById('displayTime').innerText = "10:00";
-                document.getElementById('timerIcon').classList.replace('fa-hourglass-half', 'fa-hourglass-end');
-            }
-        }, 1000);
-    }
-
-    // RESULTS CHART
-    const ctx = document.getElementById('resultsChart').getContext('2d');
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Existing System', 'Our Solution'],
-            datasets: [{
-                data: [70, 92],
-                backgroundColor: ['#1e293b', '#3b82f6'],
-                borderRadius: 15,
-                barThickness: 50
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: { color: '#ffffff05' },
-                    ticks: { color: '#475569' }
-                },
-                x: {
-                    grid: { display: false },
-                    ticks: { color: '#475569' }
-                }
-            }
-        }
-    });
-
-    // START TIMER
-    startTimer();
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
 </script>
-
-
-    </button>
-  </a>
-</div>
-</body></html>
+</body>
+</html>
    
